@@ -1,18 +1,15 @@
 #!/bin/bash
 set -eu -o pipefail
 
-echo "Updating core packages"
-sudo yum update -y
-
 echo "Updating awscli..."
-sudo yum install -y python2-pip
-sudo yum install -y python3-pip python3 python3-setuptools
 sudo pip install --upgrade awscli
 sudo pip install future
 sudo pip3 install future
 
+# need to use a urllib3 version below 1.25 otherwise cloud-init will fail, because its requests dependency requires a urllib3 <1.25, which will cause the machine to immediately shut down due to 10-power-off-on-failure.conf
+sudo pip install urllib3==1.24.*
+
 echo "Installing zip utils..."
-sudo yum update -y -q
 sudo yum install -y zip unzip git pigz
 
 echo "Installing bk elastic stack bin files..."
